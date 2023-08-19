@@ -71,11 +71,11 @@ export async function getPostByPostIdController (request: Request, response: Res
     }
 }
 
-export async function postPost (request: Request, response: Response): Promise<Response<Status>> {
+export async function postPost(request: Request, response: Response): Promise<Response<Status>> {
     try {
-        const { postPhotoUrl, postQuote,  postPhotographerName, postPhotographerUrl } = request.body
-        const profile: Profile = request.session.profile as Profile
-        const postProfileId: string = profile.profileId as string
+        const { postPhotoUrl, postQuote, postPhotographerName, postPhotographerUrl } = request.body;
+        const profile: Profile | undefined = request.session?.profile;
+        const postProfileId: string = profile?.profileId ?? "fac40941-435a-4040-bd9d-897fc06ac64f";
 
         const post: Post = {
             postId: uuid(),
@@ -84,24 +84,25 @@ export async function postPost (request: Request, response: Response): Promise<R
             postQuote,
             postCreationTime: null,
             postPhotographerName,
-            postPhotographerUrl
-        }
-        const result = await insertPost(post)
+            postPhotographerUrl,
+        };
+        const result = await insertPost(post);
         const status: Status = {
             status: 200,
             message: result,
-            data: {postId:post.postId}
-        }
-        return response.json(status)
-    }catch (error) {
-        console.log(error)
+            data: { postId: post.postId },
+        };
+        return response.json(status);
+    } catch (error) {
+        console.log(error);
         return response.json({
             status: 500,
             message: 'error creating post try again later',
-            data: null
-        })
+            data: null,
+        });
     }
 }
+
 
 
 export async function getPostsByPromptIdController(request: Request, response: Response): Promise<Response<Status>> {
