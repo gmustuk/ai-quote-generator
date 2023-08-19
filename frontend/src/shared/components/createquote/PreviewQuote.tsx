@@ -32,13 +32,15 @@ export function PreviewQuote(props: PreviewQuoteProps) {
     // console.log("Props create quote: Topic ", props.createQuote?.topic)
     // console.log("Props create quote: Voice ", props.createQuote?.voice)
     async function savePost() {
-            const partialPost: PartialPost = {
-            postProfileId: profile?.profileId as string,
+        // Use the given profile ID if profile is null or undefined; otherwise, use the existing profile ID
+        const postProfileId = profile?.profileId ? profile.profileId : "fac40941-435a-4040-bd9d-897fc06ac64f";
+
+        const partialPost: PartialPost = {
+            postProfileId: postProfileId,
             postPhotoUrl: imgTemplates[props.index],
             postQuote: props.quote,
             postPhotographerName: props.image.userName,
             postPhotographerUrl: props.image.userHtmlLink,
-
         };
 
         const result = await submitQuote(partialPost ) as MutationResponse;
@@ -60,7 +62,7 @@ export function PreviewQuote(props: PreviewQuoteProps) {
         // Save the post prompt for Topic
         const topicResult = await savePrompt(VoicePostPrompt ) as MutationResponse;
 
-        // console.log(result.data.data.postId)
+         console.log(result.data.data.postId)
         navigate(`/display-quote/${result.data.data.postId}`)
     }
 
